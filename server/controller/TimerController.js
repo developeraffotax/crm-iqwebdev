@@ -7,7 +7,7 @@ exports.getTimerState = async (req, res) => {
   try {
     const [timer, clients, jobs] = await Promise.all([
       Timerdb.findOne({ user_id: req.user._id })
-        .select("startTime endTime notes client_id job_id")
+        .select("startTime endTime notes client_id job_id task_id")
         .lean()
         .sort({ _id: -1 }),
       Clientdb.find().select("_id company_name"),
@@ -42,12 +42,14 @@ exports.getTimerState = async (req, res) => {
         message: "running",
         startTime: timer.startTime,
         time_id: timer._id,
+        job_id: timer.job_id,
         user: req.user.name,
         note: timer.notes || "",
         client: selClient ? selClient : "",
         department: selDepartment ? selDepartment : "",
-        clients: clients,
-        jobs: jobs,
+        clients: clients ,
+        jobs: jobs ,
+        task_id:timer.task_id
       });
     } else {
       res.status(200).send({
@@ -99,6 +101,7 @@ exports.startStopTimer = async (req, res) => {
       departmentName: req.body.data.jobName,
       user_id: req.user._id,
       type: "Timer",
+      task_id: req.body.data.task_id
     });
 
 
@@ -117,6 +120,12 @@ exports.getTimerReport = async (req, res) => {
         .populate("job_id", "job_name")
         // .populate('user_id', 'name')
         .populate({
+          path: 'task_id',
+          populate : {
+            path : 'projectname_id'
+          }
+        })
+        .populate({
           path: "user_id",
           select: "name",
           match: { isActive: true },
@@ -128,6 +137,10 @@ exports.getTimerReport = async (req, res) => {
     ]);
 
     const curUser = req.user.name;
+
+
+    //console.log(timer)
+
 
     const response = {
       timer,

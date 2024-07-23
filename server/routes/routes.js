@@ -58,7 +58,7 @@ route.post('/admin/dashoard/get', getDashboardData )
 
 //job
 route.get('/job/add/predata', JobController.addNewClientPreData )
-route.get('/job/get/all', JobController.getJobPlanning )
+route.get('/job/get/all', authMiddleware,JobController.getJobPlanning )
 route.post('/job/client/add', JobController.addNewClient )
 route.post('/job/planing/edit', authMiddleware, JobController.editJobPlanning )
 route.post('/job/planing/edit/many', JobController.editManyJobPlanning )

@@ -1,6 +1,7 @@
 const Clientdb = require("../model/Client/client")
 const Jobsdb = require("../model/Jobs/jobs");
 const Notidb = require("../model/Notifications/Notifications");
+const Timerdb = require("../model/Timer/Timer");
 const Userdb = require("../model/Users/Users")
 const mongoose = require('mongoose');
 
@@ -119,7 +120,74 @@ exports.addNewClient = async (req, res) => {
 
 exports.getJobPlanning = async (req, res) => {
 
+  
   const jobs = await Jobsdb.find().populate('client_id').populate('job_holder_id').populate('manager_id');
+
+//    const runningTimer = await Timerdb.findOne({
+//     user_id: req.user._id,
+//     type: "Timer",
+//   }).sort({ _id: -1 });
+
+//   if (
+//     runningTimer &&
+//     runningTimer.startTime !== undefined &&
+//     runningTimer.endTime === undefined
+//   ) {
+    
+//     const runningTimerJob = await Jobsdb.findOne({
+//       _id: runningTimer.job_id
+//     })
+// console.log(runningTimerJob)
+
+//     let newJobs = [...jobs];
+
+    
+
+//     const indexOfRTJ = newJobs.findIndex((el) => el._id === runningTimerJob._id);
+
+
+
+//     console.log(indexOfRTJ, ' the result of the ')
+
+
+//     // problem here
+//     //newJobs.splice(0, 0, runningTimerJob)
+
+    
+
+
+//    const result = newJobs.filter((el, i) => i !== indexOfRTJ);
+
+//    result.unshift(runningTimerJob)
+
+    
+//     console.log(newJobs[0])
+
+
+//     return res.json(result);
+
+//   }
+
+
+        // setMainRowData((prev) => {
+      //   let jobsArray = [...prev];
+      //   let runningTimerJob = prev.find((el) => el._id === state.data.job_id);
+  
+      //   jobsArray[0] = runningTimerJob;
+  
+      //   return jobsArray;
+  
+      // });
+
+
+
+
+
+
+
+
+
+
     
       if (!jobs) {
           return res.status(400).json({

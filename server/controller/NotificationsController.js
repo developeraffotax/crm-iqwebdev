@@ -1,4 +1,5 @@
 const Notidb = require("../model/Notifications/Notifications");
+const Userdb = require("../model/Users/Users");
 
 
 exports.GetAllNotifications = async (req, res) => {
@@ -8,12 +9,14 @@ exports.GetAllNotifications = async (req, res) => {
     const notifications = await Notidb.find({ user_id: userId }).sort({ _id: -1 });
     const unreadNoti = notifications.filter(noti => !noti.isRead);
     const unreadNotiNumber = unreadNoti.length;
-
+    const userName = await Userdb.findOne({_id: userId});
     res.status(200).json({
         message: "Successful",
         notifications: notifications,
         unreadNoti: unreadNoti,
-        unreadNotiNumber: unreadNotiNumber
+        unreadNotiNumber: unreadNotiNumber,
+        user: userName.name
+
     })
 }
 

@@ -16,7 +16,7 @@ dotenv.config();
 // { path: "../config.env" }
 const PORT = process.env.PORT || 5000;
 
-
+connectDB();
 
 if (cluster.isPrimary) {
   // Fork workers.
@@ -28,8 +28,7 @@ if (cluster.isPrimary) {
     cluster.fork();
   });
 } else {
-  
-const app = express();
+  const app = express();
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -42,6 +41,7 @@ app.get("*", (req, res) => {
   res.sendFile(path.resolve(__dirname, "./client", "build", "index.html"));
 });
 
+
 app.use("/", (req, res) => {
   res.send("Server is running...");
 });
@@ -50,15 +50,10 @@ app.get("*", function (req, res) {
   res.send("404 Not Found");
 });
 
-
-
-
-
-
 app.listen(PORT, () => {
   console.log(`Server Started on http://localhost:${PORT}`.bgMagenta.white);
-  connectDB();
 });
 }
+
 
 

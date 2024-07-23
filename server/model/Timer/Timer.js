@@ -28,6 +28,11 @@ var TimerSchema = new mongoose.Schema({
     type: mongoose.Types.ObjectId,
     ref: "users",
   },
+
+  task_id: {
+    type: mongoose.Types.ObjectId,
+    ref: "project",
+  },
 });
 
 const Timerdb = mongoose.model("timer", TimerSchema);
