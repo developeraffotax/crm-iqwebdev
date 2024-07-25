@@ -6,7 +6,7 @@ const Userdb = require("../model/Users/Users");
 exports.getTimerState = async (req, res) => {
   try {
     const [timer, clients, jobs] = await Promise.all([
-      Timerdb.findOne({ user_id: req.user._id })
+      Timerdb.findOne({ user_id: req.user._id, endTime: {$eq: undefined} })
         .select("startTime endTime notes client_id job_id task_id")
         .lean()
         .sort({ _id: -1 }),
