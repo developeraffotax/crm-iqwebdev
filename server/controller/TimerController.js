@@ -71,7 +71,9 @@ exports.startStopTimer = async (req, res) => {
   const test_timer = await Timerdb.findOne({
     user_id: req.user._id,
     type: "Timer",
+    endTime: {$eq: undefined}
   }).sort({ _id: -1 });
+  console.log(test_timer)
   if (
     test_timer &&
     test_timer.startTime !== undefined &&
@@ -92,23 +94,32 @@ exports.startStopTimer = async (req, res) => {
   } else {
     console.log(req.body)
 
+    if(!req.body.data.job_id && !req.body.data.task_id){
+      console.log('inside the if block starttimer validation failed')
+      return res.status(422).json({message: 'Validation Failed to start the timer! '})
+    }
+    // const anyRunningTimer = await Timerdb.findOne({ user_id: req.user._id, endTime: {$eq: undefined} })
+    // console.log(anyRunningTimer, 'anyrunning timer here')
+    // if(anyRunningTimer) {
+    //   return res.status(422).json({message: ' Failed to start the timer! Timer is already running'})
+    // }
+    else {
+      const timer = await Timerdb.create({
+        startTime: time_now,
+        notes: req.body.data.notes,
+        client_id: req.body.data.client_id,
+        job_id: req.body.data.job_id,
+        departmentName: req.body.data.jobName,
+        user_id: req.user._id,
+        type: "Timer",
+        task_id: req.body.data.task_id
+      });
+
+      res.status(200).json({ message: "started", time_id: timer._id })
+    }
+
+
     
-    const timer = await Timerdb.create({
-      startTime: time_now,
-      notes: req.body.data.notes,
-      client_id: req.body.data.client_id,
-      job_id: req.body.data.job_id,
-      departmentName: req.body.data.jobName,
-      user_id: req.user._id,
-      type: "Timer",
-      task_id: req.body.data.task_id
-    });
-
-
-    res.status(200).json({
-        message: "started",
-        time_id: timer._id
-      })
   }
 };
 

@@ -20,7 +20,11 @@ exports.createUser = async (req, res) => {
     emergenyc_contact,
     start_date,
     address,
-  } = req.body;
+  } = req.body.data;
+
+
+  console.log(req.body)
+
 
   var hashed_password = "";
 
